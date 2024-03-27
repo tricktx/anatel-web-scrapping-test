@@ -50,7 +50,8 @@ def descompactar_arquivo():
     download(path = '/tmp/input/')
     # Obtenha o nome do arquivo ZIP baixado
     zip_file_path = os.path.join('/tmp/input/', 'acessos_banda_larga_fixa.zip')
-    time.sleep(300)
+    time.sleep(150)
+    print(os.listdir())
     try:
         with ZipFile(zip_file_path, 'r') as zip_ref:
             zip_ref.extractall('/tmp/input/')
