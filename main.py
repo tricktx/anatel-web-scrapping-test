@@ -47,13 +47,13 @@ def download(path):
             ).click()
 
 def descompactar_arquivo():
-    download(path = 'tmp/input/')
+    download(path = '/tmp/input/')
     # Obtenha o nome do arquivo ZIP baixado
-    zip_file_path = os.path.join('tmp/input/', 'acessos_banda_larga_fixa.zip')
+    zip_file_path = os.path.join('/tmp/input/', 'acessos_banda_larga_fixa.zip')
     time.sleep(300)
     try:
         with ZipFile(zip_file_path, 'r') as zip_ref:
-            zip_ref.extractall('tmp/input/')
+            zip_ref.extractall('/tmp/input/')
                 
     except Exception as e:
             print(f"Erro ao baixar ou extrair o arquivo ZIP: {str(e)}")
