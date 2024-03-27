@@ -1,32 +1,65 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
+from selenium.webdriver.common.by import By
+import zipfile
+from zipfile import ZipFile
+import os
 
-options = webdriver.ChromeOptions()
-# https://github.com/SeleniumHQ/selenium/issues/11637
-prefs = {
-    "download.default_directory": '/tmp/input/',
-    "download.prompt_for_download": False,
-    "download.directory_upgrade": True,
-    "safebrowsing.enabled": True,
-}
-options.add_experimental_option(
-    "prefs",
-    prefs,
-)
-options.add_argument("--headless=new")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-gpu")
-options.add_argument("--disable-dev-shm-usage")
-options.add_argument("--crash-dumps-dir=/tmp")
-options.add_argument("--remote-debugging-port=9222")
-driver = webdriver.Chrome(options=options)
-driver.get('https://dados.gov.br/dados/conjuntos-dados/acessos---banda-larga-fixa')
-time.sleep(15)
-driver.maximize_window()
-time.sleep(15)
-driver.find_element(By.XPATH, '//*[@id="btnCollapse"]').click()
-time.sleep(15)
-driver.find_element(By.XPATH, '//*[@id="btnDownloadUrl"]').click()
-time.sleep(180)
+def download(path):
+    if not os.path.exists(path):
+        os.mkdir(path)
+    options = webdriver.ChromeOptions()
+    # https://github.com/SeleniumHQ/selenium/issues/11637
+    prefs = {
+        "download.default_directory": path,
+        "download.prompt_for_download": False,
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True,
+    }
+    options.add_experimental_option(
+        "prefs",
+        prefs,
+    )
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--crash-dumps-dir=/tmp")
+    options.add_argument("--remote-debugging-port=9222")
+    driver = webdriver.Chrome(options=options)
+    driver.get('https://dados.gov.br/dados/conjuntos-dados/acessos---banda-larga-fixa')
+
+    driver.maximize_window()
+
+    WebDriverWait(driver, 30).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '/html/body/div/section/div/div[3]/div[2]/div[3]/div[2]/header/button')
+                )
+            ).click()
+
+
+    WebDriverWait(driver, 30).until(
+                EC.visibility_of_element_located(
+                    (By.XPATH, '/html/body/div/section/div/div[3]/div[2]/div[3]/div[2]/div/div[1]/div[2]/div[2]/div/button')
+                )
+            ).click()
+
+def descompactar_arquivo():
+    download(path = 'tmp/input/')
+    # Obtenha o nome do arquivo ZIP baixado
+    zip_file_path = os.path.join('tmp/input/', 'acessos_banda_larga_fixa.zip')
+    time.sleep(300)
+    try:
+        with ZipFile(zip_file_path, 'r') as zip_ref:
+            zip_ref.extractall('tmp/input/')
+                
+    except Exception as e:
+            print(f"Erro ao baixar ou extrair o arquivo ZIP: {str(e)}")
+
+
+    os.remove(zip_file_path)
+    return print(os.listdir())
+
+descompactar_arquivo()
