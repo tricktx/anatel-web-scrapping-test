@@ -38,20 +38,22 @@ def download(path):
     driver.get('https://dados.gov.br/dados/conjuntos-dados/acessos---banda-larga-fixa')
 
     driver.maximize_window()
-
+    print('primeiro passo...')
     WebDriverWait(driver, 30).until(
                 EC.visibility_of_element_located(
                     (By.XPATH, '/html/body/div/section/div/div[3]/div[2]/div[3]/div[2]/header/button')
                 )
             ).click()
 
-
+    print('segundo passo...')
     WebDriverWait(driver, 30).until(
                 EC.visibility_of_element_located(
                     (By.XPATH, '/html/body/div/section/div/div[3]/div[2]/div[3]/div[2]/div/div[1]/div[2]/div[2]/div/button')
                 )
             ).click()
-
+    print('time...')
+    time.sleep(150)
+    print(os.listdir())
 def descompactar_arquivo():
     download(path = '/tmp/input/')
     # Obtenha o nome do arquivo ZIP baixado
