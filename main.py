@@ -53,13 +53,13 @@ def download(path):
             ).click()
     print('time...')
     time.sleep(150)
-    print(os.listdir())
+    print(os.listdir('/tmp/input/'))
 def descompactar_arquivo():
     download(path = '/tmp/input/')
     # Obtenha o nome do arquivo ZIP baixado
     zip_file_path = os.path.join('/tmp/input/', 'acessos_banda_larga_fixa.zip')
     time.sleep(150)
-    print(os.listdir())
+    print(os.listdir('/tmp/input/'))
     try:
         with ZipFile(zip_file_path, 'r') as zip_ref:
             zip_ref.extractall('/tmp/input/')
@@ -69,6 +69,6 @@ def descompactar_arquivo():
 
 
     os.remove(zip_file_path)
-    return print(os.listdir())
+    return print(os.listdir('/tmp/input/'))
 
 descompactar_arquivo()
